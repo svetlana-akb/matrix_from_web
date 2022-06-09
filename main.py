@@ -20,26 +20,26 @@ async def fetch(session, url):
     except Exception as ex:
         return [None, "ERROR: %s" % ex]
         
-def generate_result_list(g_matrix, right_top_x, right_top_y, left_down_x, left_down_y, result_list):
-    if not((right_top_x <= left_down_x)and(right_top_y >= left_down_y)):
+def generate_result_list(g_matrix, left_top_x, left_top_y, right_down_x, right_down_y, result_list):
+    if not((left_top_x <= right_down_x)and(left_top_y <= right_down_y)):
         return result_list
-    i = right_top_x
-    while(i <= left_down_x):
-        result_list.append(g_matrix[i][right_top_y])
+    i = left_top_x
+    while(i <= right_down_x):
+        result_list.append(g_matrix[i][left_top_y])
         i+= 1
-    j = right_top_y-1
-    while(j >= left_down_y):
-        result_list.append(g_matrix[left_down_x][j])
-        j-= 1
-    i = left_down_x-1
-    while(i >= right_top_x):
-        result_list.append(g_matrix[i][left_down_y])
-        i-= 1
-    j = left_down_y+1
-    while(j < right_top_y):
-        result_list.append(g_matrix[right_top_x][j])
+    j = left_top_y+1
+    while(j <= right_down_y):
+        result_list.append(g_matrix[right_down_x][j])
         j+= 1
-    return generate_result_list(g_matrix, right_top_x+1, right_top_y-1, left_down_x-1, left_down_y+1, result_list)
+    i = right_down_x-1
+    while(i >= left_top_x):
+        result_list.append(g_matrix[i][right_down_y])
+        i-= 1
+    j = right_down_y-1
+    while(j > left_top_y):
+        result_list.append(g_matrix[left_top_x][j])
+        j-= 1
+    return generate_result_list(g_matrix, left_top_x+1, left_top_y+1, right_down_x-1, right_down_y-1, result_list)
     
 def matrix_retriever(data):
     matrix=[]
@@ -61,7 +61,7 @@ async def get_matrix(url):
         print(error)
     else:
         [n,m,matrix] = matrix_retriever(data)
-        result_matrix = generate_result_list(matrix, 0, m-1, n-1, 0, [])
+        result_matrix = generate_result_list(matrix, 0, 0, n-1, m-1, [])
         print(result_matrix)
     await asyncio.sleep(1)
 
