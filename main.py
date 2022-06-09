@@ -54,6 +54,7 @@ def matrix_retriever(data):
     return [n,m,matrix]
     
 async def get_matrix(url):
+    result_matrix = []
     print("Downloading matrix from %s ...\n" % url)
     async with aiohttp.ClientSession() as session:
         [data, error] = await fetch(session, url)
@@ -62,9 +63,10 @@ async def get_matrix(url):
     else:
         [n,m,matrix] = matrix_retriever(data)
         result_matrix = generate_result_list(matrix, 0, 0, n-1, m-1, [])
-        print(result_matrix)
     await asyncio.sleep(1)
+    return result_matrix
 
 url = sys.argv[1] if len(sys.argv)>1 else input("Please input url:\n")
 matrix = asyncio.run(get_matrix(url))
+print(matrix)
 input("")
