@@ -1,6 +1,7 @@
 import sys
 import asyncio
 import aiohttp
+from aiohttp.client_exceptions import InvalidURL
 import re
 
 
@@ -17,7 +18,7 @@ async def fetch(session, url):
                     return [None, 'ERROR: Data is in wrong format.']
             else:
                 return [None, "ERROR: Response status is %s." % status]
-    except aiohttp.client_exceptions.InvalidURL:
+    except InvalidURL:
         return [None, 'ERROR: Invalid URL.']
     except Exception as ex:
         return [None, "ERROR: %s" % ex]
